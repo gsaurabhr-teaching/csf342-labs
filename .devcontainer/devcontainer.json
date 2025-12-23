@@ -11,5 +11,6 @@
       ]
     }
   },
-  "remoteUser": "vscode"
+  "remoteUser": "vscode",
+  "postCreateCommand": "chmod +x scripts/*.sh"
 }

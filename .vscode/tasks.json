@@ -1,58 +1,39 @@
 {
   "version": "2.0.0",
+
+  "inputs": [
+    {
+      "id": "lab",
+      "type": "promptString",
+      "description": "Enter lab folder (e.g. lab01)"
+    },
+    {
+      "id": "artefact",
+      "type": "promptString",
+      "description": "Enter artefact name (e.g. task1)"
+    }
+  ],
+
   "tasks": [
     {
-      "label": "Compile",
+      "label": "Compile (lab + artefact)",
       "type": "shell",
       "command": "./scripts/compile.sh ${input:lab} ${input:artefact}",
-      "inputs": [
-        {
-          "id": "lab",
-          "type": "promptString",
-          "description": "Enter lab folder (e.g. lab01)"
-        },
-        {
-          "id": "artefact",
-          "type": "promptString",
-          "description": "Enter artefact name (e.g. task1)"
-        }
-      ],
-      "group": "build"
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
     },
     {
       "label": "Run (generate VCD)",
       "type": "shell",
       "command": "./scripts/run.sh ${input:lab} ${input:artefact}",
-      "inputs": [
-        {
-          "id": "lab",
-          "type": "promptString",
-          "description": "Enter lab folder (e.g. lab01)"
-        },
-        {
-          "id": "artefact",
-          "type": "promptString",
-          "description": "Enter artefact name (e.g. task1)"
-        }
-      ],
       "group": "test"
     },
     {
       "label": "Generate SVG",
       "type": "shell",
       "command": "./scripts/svg.sh ${input:lab} ${input:artefact}",
-      "inputs": [
-        {
-          "id": "lab",
-          "type": "promptString",
-          "description": "Enter lab folder (e.g. lab01)"
-        },
-        {
-          "id": "artefact",
-          "type": "promptString",
-          "description": "Enter artefact name (e.g. task1)"
-        }
-      ],
       "group": "test"
     }
   ]
