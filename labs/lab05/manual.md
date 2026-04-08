@@ -122,7 +122,11 @@ Implement the two read ports inside the `reg_file` module.
 * **Timing Verification:**
     1.  Draw the timing path: `clock edge` → `Reg clk→Q` → `Read Logic` → `Data Valid`.
     2.  **Calculate:** Based on the canonical delays, what is the expected total time from the clock edge to valid read data?
+
+    ->The expected total time from clock edge to valid read data is 2 nanoseconds.
     3.  **Verify:** Simulate and check if the waveform matches your calculation.
+
+    -->2ns, matches
 
 > **Verification Step:** Do not proceed until you have verified Task 1C. Create a test bench `tb_reg_read.v` to confirm you can read initial values from the registers.
   
@@ -158,6 +162,7 @@ Analyze the write timing path.
 1.  **Trace:** `rd (stable)` → `Decoder` → `Register .we port` → `Positive Clock Edge` → `Register Update`.
 2.  **Report:** Calculate the setup time requirement relative to the clock edge.
 
+-->Setup Time = #1 ns  
 > **Verification Step:** Create a separate test bench `tb_reg_full.v`. Verify that writing to register $N$ and reading from register $N$ works correctly, and that writing to `x0` has no effect.
 
 ---
@@ -243,36 +248,37 @@ Create a top-level module that connects your sub-components to form a complete R
 5.  **Write Back:** Connect the ALU Result back to the Register File write data port.
 
 ### Part 2: Execution Trace
-Choose one R-type instruction (e.g., `sub x5, x3, x4`) and trace its execution.
+
+**Example: sub x5, x3, x4**
 
 **1. Instruction Details**
-* **Assembly:** `____________________`
-* **Hex Code:** `0x__________________`
+* **Assembly:** `sub x5, x3, x4`
+* **Hex Code:** `0x40A282B3`
 
 **2. Field Extraction**
 Decode your instruction manually:
 | Field | Binary Value |
 |-------|--------------|
-| rs1   | `_____`      |
-| rs2   | `_____`      |
-| rd    | `_____`      |
-| funct3| `_____`      |
-| funct7| `_____`      |
+| rs1   | `00011`      |  // x3
+| rs2   | `00100`      |  // x4
+| rd    | `00101`      |  // x5
+| funct3| `000`        |
+| funct7| `0100000`    |
 
 **3. Execution Trace**
 * **Register Read:**
-    * Value at `rs1`: `0x________________`
-    * Value at `rs2`: `0x________________`
+  * Value at `rs1`: `0x0000000A`   // x3 = 10
+  * Value at `rs2`: `0x00000005`   // x4 = 5
 * **Control Generation:**
-    * Calculated `alu_ctrl`: `___` (binary)
+  * Calculated `alu_ctrl`: `000` (binary)
 * **ALU Result:**
-    * Output: `0x________________`
+  * Output: `0x00000005`           // 10 - 5 = 5
 
 **4. Write-Back Confirmation**
-* **Value written to `rd`:** `0x________________`
+* **Value written to `rd`:** `0x00000005` // x5 gets 5
 * **Total Latency:** Calculate the time from Instruction Valid → ALU Result Valid.
-    * **Calculated:** `________ ns`
-    * **Simulated:** `________ ns`
+  * **Calculated:** `3 ns`  // (1 ns decoder + 1 ns reg clk→Q + 1 ns ALU)
+  * **Simulated:** `3 ns`   // (matches waveform)
 
 ---
 ### Submission
