@@ -6,7 +6,10 @@ module dut (
   input reset,
   output reg q
 );
-  always @(posedge clk) begin
-    q <= d;
+  always @(posedge clk or negedge reset) begin
+    if (reset!=1)
+      q <= 0;
+    else
+      q<=d;
   end
 endmodule
